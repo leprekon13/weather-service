@@ -1,3 +1,4 @@
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -22,11 +23,7 @@ public class WeatherApiClient {
     public WeatherApiClient() {
         // Создаем объект Properties для хранения конфигурационных данных
         Properties properties = new Properties();
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("application.properties")) {
-            // Проверяем, найден ли файл application.properties
-            if (input == null) {
-                throw new RuntimeException("Не удалось найти файл application.properties");
-            }
+        try (InputStream input = new FileInputStream("resources/application.properties")) {
             // Загружаем свойства из файла
             properties.load(input);
             // Читаем ключ API из файла конфигурации
@@ -34,7 +31,7 @@ public class WeatherApiClient {
             // Читаем базовый URL API из файла конфигурации
             this.baseUrl = properties.getProperty("weather-api-url");
         } catch (IOException e) {
-            // Обрабатываем ошибки, если не удалось прочитать файл
+            // Обрабатываем ошибки при чтении файла
             throw new RuntimeException("Ошибка при загрузке свойств из файла application.properties", e);
         }
     }
