@@ -1,5 +1,6 @@
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import java.io.IOException;
 
@@ -18,6 +19,19 @@ public class WeatherService {
     public WeatherService() {
         this.weatherApiClient = new WeatherApiClient();
         this.objectMapper = new ObjectMapper();
+    }
+
+    // Метод для получения всей информации о погоде в виде отформатированной строки JSON
+    public String getAllWeatherData(double lat, double lon) {
+        try {
+            String jsonResponse = weatherApiClient.getWeatherData(lat, lon);
+            // Преобразуем JSON-строку в форматированный вид
+            ObjectWriter writer = objectMapper.writerWithDefaultPrettyPrinter();
+            JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+            return writer.writeValueAsString(jsonNode);
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при обработке JSON-ответа", e);
+        }
     }
 
     /**

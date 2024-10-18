@@ -1,13 +1,36 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
         // Инициализируем экземпляр WeatherService для взаимодействия с сервисом погоды
         WeatherService weatherService = new WeatherService();
+        Scanner scanner = new Scanner(System.in);
 
-        // Задаем координаты для запроса (координаты Москвы)
-        double lat = 55.7558; // Широта Москвы
-        double lon = 37.6176; // Долгота Москвы
+        // Объявляем переменные lat и lon вне блока try, чтобы они были доступны в дальнейшем коде
+        double lat = 0.0;
+        double lon = 0.0;
 
         try {
+            // Получение координат от пользователя
+            System.out.println("Введите широту (можно использовать запятую или точку для дробной части): ");
+            String latInput = scanner.next();
+            lat = Double.parseDouble(latInput.replace(",", "."));
+
+            System.out.println("Введите долготу (можно использовать запятую или точку для дробной части): ");
+            String lonInput = scanner.next();
+            lon = Double.parseDouble(lonInput.replace(",", "."));
+
+        } catch (NumberFormatException e) {
+            System.err.println("Ошибка: введите корректное числовое значение.");
+            return;  // Завершаем выполнение программы при некорректном вводе
+        }
+
+        try {
+            // Вывод всех данных о погоде
+            System.out.println("\nВсе данные о погоде для указанных координат:");
+            String allWeatherData = weatherService.getAllWeatherData(lat, lon);
+            System.out.println(allWeatherData);
+
             // Получаем текущую температуру по заданным координатам
             double currentTemp = weatherService.getCurrentTemperature(lat, lon);
             System.out.println("Текущая температура в Москве: " + currentTemp + "°C");
